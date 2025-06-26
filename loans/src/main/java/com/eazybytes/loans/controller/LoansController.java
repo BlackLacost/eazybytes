@@ -254,6 +254,8 @@ public class LoansController {
     )
     @GetMapping("/contact-info")
     public ResponseEntity<LoansContactInfoDto> getContactInfo() {
+        log.debug("Invoked Loans contact-info API");
+//        throw new RuntimeException(); // suncomment for test retry by resilience4j
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(loansContactInfoDto);

@@ -21,6 +21,10 @@ spring:
     port: 5672
     username: "guest"
     password: "guest"
+  cloud:
+    openfeign:
+      circuitbreaker:
+        enabled: true
 
 management:
   endpoints:
@@ -62,3 +66,32 @@ logging:
     com:
       eazybytes:
         accounts: DEBUG
+
+resilience4j.circuitbreaker:
+  configs:
+    default:
+      sliding-window-size: 10 # Анализировать последние 10 вызовов и считать, сколько из них завершились ошибкой.
+      failure-rate-threshold: 50 # Переход в OPEN, если процент ошибок больше 50.
+      wait-duration-in-open-state: 10000 # Количество миллисекунд в состоянии OPEN
+      # Делает в состояние Half-Open два запроса и если хотя бы один будет не успешным, переводит опять в OPEN.
+      permitted-number-of-calls-in-half-open-state: 2
+
+resilience4j.retry:
+  configs:
+    default:
+      max-attempts: 3
+      wait-duration: 500
+      enable-exponential-backoff: true
+      exponential-backoff-multiplier: 2
+      # Нужно использовать или ignore-exceptions или retry-exceptions
+#      ignore-exceptions:
+#        - java.lang.NullPointerException # Чтобы при null pointer exception не было retry
+      retry-exceptions: # Какие exceptions будут использоваться для retry, остальные нет
+        - java.util.concurrent.TimeoutException
+
+resilience4j.ratelimiter:
+  configs:
+    default:
+      timeout-duration: 1000
+      limit-refresh-period: 5000
+      limit-for-period: 1

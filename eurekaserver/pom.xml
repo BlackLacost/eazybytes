@@ -74,7 +74,7 @@
                 <version>3.4.2</version>
                 <configuration>
                     <to>
-                        <image>blacklacost/${project.artifactId}:s9</image>
+                        <image>blacklacost/${project.artifactId}:s10</image>
                     </to>
                 </configuration>
             </plugin>
